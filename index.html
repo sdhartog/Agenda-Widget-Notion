@@ -1,45 +1,18 @@
-/* Algemene kalenderstijl */
-.calendar {
-    background-color: white; /* Verander de achtergrond naar wit */
-    color: purple; /* Algemene tekstkleur naar paars */
-    border-radius: 10px;
-    padding: 10px;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-/* Stijl voor de header van de maand en pijlen */
-.calendar-header {
-    color: white; /* Tekstkleur van de maand naar wit */
-    background-color: purple; /* Achtergrond van de header naar paars */
-    padding: 5px;
-    font-size: 1.2em;
-    border-radius: 5px;
-}
-
-/* Stijl voor weeknummers */
-.week-number {
-    color: purple;
-    font-weight: bold;
-}
-
-/* Stijl voor de dagen */
-.calendar-day {
-    background-color: purple; /* Dagcellen paars maken */
-    color: white; /* Tekstkleur van de dagen wit maken */
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin: 2px;
-}
-
-/* Stijl voor de huidige dag */
-.calendar-day.today {
-    background-color: white; /* Huidige dag naar wit bolletje */
-    color: purple; /* Tekstkleur van de huidige dag naar paars */
-    font-weight: bold;
-    border: 2px solid purple; /* Optionele paarse rand om de huidige dag extra te markeren */
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calendar</title>
+    <style>
+        /* Algemene kalenderstijl */
+        .calendar {
+            background-color: white; /* Achtergrond naar wit */
+            color: purple; /* Algemene tekstkleur naar paars */
+            border-radius: 10px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
