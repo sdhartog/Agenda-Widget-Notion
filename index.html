@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calendar</title>
+    <style>
+        /* CSS styling for the calendar */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .calendar {
+            width: 300px;
+            background-color: #8e44ad;
+            color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .calendar-header {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .calendar-header span {
+            font-size: 1.3em;
+        }
+        .calendar-weekdays, .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            padding: 10px;
+            color: #333;
+        }
+        .calendar-weekdays div, .calendar-days div {
+            text-align: center;
+            padding: 5px 0;
+        }
+        .calendar-weekdays div {
+            font-weight: bold;
+            color: #eee;
+        }
+        .calendar-days div {
+            color: #555;
+            background-color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .current-day {
+            background-color: #8e44ad;
+            color: #fff;
+        }
+        .other-month {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar">
+    <div class="calendar-header">
+        <button id="prev">&lt;</button>
+        <span id="month-year"></span>
+        <button id="next">&gt;</button>
+    </div>
+    <div class="calendar-weekdays">
+        <div>Wk</div>
+        <div>Mo</div>
+        <div>Tu</div>
+        <div>We</div>
+        <div>Th</div>
+        <div>Fr</div>
+        <div>Sa</div>
+        <div>Su</div>
+    </div>
+    <div class="calendar-days" id="calendar-days">
+        <!-- Days will be populated by JavaScript -->
+    </div>
+</div>
+
+<script>
+    const calendar = document.querySelector("#calendar-days");
+    const monthYear = document.querySelector("#month-year");
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    function renderCalendar(month, year) {
+        calendar.innerHTML = "";
+        monthYear.textContent = `${months[month]} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            const weekDiv = document.createElement("div");
+            weekDiv.textContent = getWeekNumber(new Date(year, month, date));
+            calendar.appendChild(weekDiv);
+
+            for (let j = 0; j < 7; j++) {
+                let dayDiv = document.createElement("div");
+
+                if (i === 0 && j < firstDay) {
+                    dayDiv.classList.add("other-month");
+                    dayDiv.textContent = "";
+                } else if (date > daysInMonth) {
+                    dayDiv.classList.add("other-month");
+                    dayDiv.textContent = "";
+                } else {
+                    dayDiv.textContent = date;
+                    if (
+                        date === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear()
+                    ) {
+                        dayDiv.classList.add("current-day");
+                    }
+                    date++;
+                }
+                calendar.appendChild(dayDiv);
+            }
+        }
+    }
+
+    function getWeekNumber(date) {
+        const start = new Date(date.getFullYear(), 0, 1);
+        const diff = date - start + (start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000;
+        const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)) + 1;
+        return Math.ceil(dayOfYear / 7);
+    }
+
+    prev.addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar(currentMonth, currentYear);
+    });
+
+    next.addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar(currentMonth, currentYear);
+    });
+
+    renderCalendar(currentMonth, currentYear);
+</script>
+
+</body>
+</html>
