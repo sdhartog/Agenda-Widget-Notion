@@ -159,3 +159,13 @@
 
 </body>
 </html>
+
+// Selecteer alle dagen in de kalender
+const days = document.querySelectorAll('.calendar-day');
+
+// Verwijder de laatste 7 dagen (laatste rij)
+for (let i = days.length - 7; i < days.length; i++) {
+    if (days[i]) {
+        days[i].remove();
+    }
+}
