@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Compacte Interactieve Kalender</title>
+  <title>Compacte Kalender met Weeknummers</title>
   <style>
     .calendar {
       background-color: white;
@@ -81,32 +81,46 @@
   </style>
 </head>
 <body>
-  <div class="calendar">
-    <div class="calendar-header">
-      <button onclick="changeMonth(-1)">&#10094;</button>
-      <div id="monthYear"></div>
-      <button onclick="changeMonth(1)">&#10095;</button>
-    </div>
-    <div class="calendar-weekdays">
-      <div>Wk</div>
-      <div>Ma</div>
-      <div>Di</div>
-      <div>Wo</div>
-      <div>Do</div>
-      <div>Vr</div>
-      <div>Za</div>
-      <div>Zo</div>
-    </div>
-    <div class="calendar-days" id="calendarDays"></div>
+
+<div class="calendar">
+  <div class="calendar-header">
+    <button onclick="changeMonth(-1)">&#10094;</button>
+    <div id="monthYear"></div>
+    <button onclick="changeMonth(1)">&#10095;</button>
   </div>
+  <div class="calendar-weekdays">
+    <div>Wk</div>
+    <div>Ma</div>
+    <div>Di</div>
+    <div>Wo</div>
+    <div>Do</div>
+    <div>Vr</div>
+    <div>Za</div>
+    <div>Zo</div>
+  </div>
+  <div class="calendar-days" id="calendarDays"></div>
+</div>
 
-  <script>
-    const calendarDays = document.getElementById("calendarDays");
-    const monthYear = document.getElementById("monthYear");
-    let currentDate = new Date();
+<script>
+  let currentDate = new Date();
 
-    function renderCalendar() {
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
+  function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return weekNo;
+  }
 
-      const firstDay
+  function renderCalendar(date) {
+    const calendarDays = document.getElementById('calendarDays');
+    const monthYear = document.getElementById('monthYear');
+    calendarDays.innerHTML = '';
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const firstWeekday = (firstDay.getDay() + 6) % 7;
+
+    const totalDays = lastDay.getDate();
