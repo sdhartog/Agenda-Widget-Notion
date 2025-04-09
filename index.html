@@ -1,184 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Calendar with Week Numbers</title>
-    <style>
-        .calendar {
-            background-color: white;
-            color: purple;
-            border-radius: 10px;
-            padding: 10px;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            max-width: 350px;
-            margin: 0 auto;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactieve Kalender met Weeknummers</title>
+  <style>
+    .calendar {
+      background-color: white;
+      color: purple;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      max-width: 350px;
+      margin: 0 auto;
+    }
 
-        .calendar-header {
-            color: white;
-            background-color: purple;
-            padding: 10px;
-            font-size: 1.2em;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .calendar-header {
+      color: white;
+      background-color: purple;
+      padding: 10px;
+      font-size: 1.2em;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .calendar-header button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
+    .calendar-header button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
 
-        .calendar-weekdays {
-            display: grid;
-            grid-template-columns: 1fr repeat(7, 1fr);
-            color: purple;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: 1fr repeat(7, 1fr);
+      color: purple;
+      font-weight: bold;
+      margin-top: 10px;
+    }
 
-        .calendar-days {
-            display: grid;
-            grid-template-columns: 1fr repeat(7, 1fr);
-        }
+    .calendar-days {
+      display: grid;
+      grid-template-columns: 1fr repeat(7, 1fr);
+    }
 
-        .calendar-day, .week-number {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 2px;
-            border-radius: 50%;
-            font-size: 0.8em;
-        }
+    .calendar-day, .week-number {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px;
+      border-radius: 50%;
+      font-size: 0.8em;
+    }
 
-        .week-number {
-            background-color: #e0e0e0;
-            color: purple;
-            font-weight: bold;
-            border-radius: 5px;
-        }
+    .week-number {
+      background-color: #e0e0e0;
+      color: purple;
+      font-weight: bold;
+      border-radius: 5px;
+    }
 
-        .calendar-day {
-            background-color: purple;
-            color: white;
-        }
+    .calendar-day {
+      background-color: purple;
+      color: white;
+    }
 
-        .calendar-day.today {
-            background-color: white;
-            color: purple;
-            font-weight: bold;
-            border: 2px solid purple;
-        }
-    </style>
+    .calendar-day.today {
+      background-color: white;
+      color: purple;
+      font-weight: bold;
+      border: 2px solid purple;
+    }
+  </style>
 </head>
 <body>
 
 <div class="calendar">
-    <div class="calendar-header">
-        <button onclick="prevMonth()">&#60;</button>
-        <div id="calendarMonthYear"></div>
-        <button onclick="nextMonth()">&#62;</button>
-    </div>
-    <div class="calendar-weekdays">
-        <div class="week-number">Wk</div>
-        <div>Mo</div>
-        <div>Tu</div>
-        <div>We</div>
-        <div>Th</div>
-        <div>Fr</div>
-        <div>Sa</div>
-        <div>Su</div>
-    </div>
-    <div id="calendarDays" class="calendar-days"></div>
+  <div class="calendar-header">
+    <button onclick="prevMonth()">&#60;</button>
+    <div id="calendarMonthYear"></div>
+    <button onclick="nextMonth()">&#62;</button>
+  </div>
+  <div class="calendar-weekdays">
+    <div>Wk</div>
+    <div>Ma</div>
+    <div>Di</div>
+    <div>Wo</div>
+    <div>Do</div>
+    <div>Vr</div>
+    <div>Za</div>
+    <div>Zo</div>
+  </div>
+  <div class="calendar-days" id="calendarDays"></div>
 </div>
 
 <script>
-    let currentDate = new Date();
-
-    function renderCalendar() {
-        const month = currentDate.getMonth();
-        const year = currentDate.getFullYear();
-
-        document.getElementById("calendarMonthYear").innerText = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
-
-        const calendarDays = document.getElementById("calendarDays");
-        calendarDays.innerHTML = "";
-
-        const firstDayOfMonth = new Date(year, month, 1);
-        const lastDayOfMonth = new Date(year, month + 1, 0);
-
-        const startDayOfWeek = firstDayOfMonth.getDay() || 7; // Maandag-start
-        const totalDaysInMonth = lastDayOfMonth.getDate();
-
-        const today = new Date();
-        const isCurrentMonth = month === today.getMonth() && year === today.getFullYear();
-
-        let currentWeekNumber = getWeekNumber(firstDayOfMonth);
-
-        let day = 1;
-        let rowHasData = false;
-
-        // Dynamische rijen genereren
-        while (day <= totalDaysInMonth || rowHasData) {
-            rowHasData = false;
-
-            const weekNumberCell = document.createElement("div");
-            weekNumberCell.classList.add("week-number");
-            if (day <= totalDaysInMonth) {
-                weekNumberCell.textContent = currentWeekNumber;
-            }
-            calendarDays.appendChild(weekNumberCell);
-
-            for (let j = 1; j <= 7; j++) {
-                const dayCell = document.createElement("div");
-                dayCell.classList.add("calendar-day");
-
-                if ((day === 1 && j < startDayOfWeek) || day > totalDaysInMonth) {
-                    dayCell.textContent = ""; // Lege cel
-                } else {
-                    if (isCurrentMonth && day === today.getDate()) {
-                        dayCell.classList.add("today");
-                    }
-                    dayCell.textContent = day;
-                    day++;
-                    rowHasData = true;
-                }
-
-                calendarDays.appendChild(dayCell);
-            }
-
-            if (rowHasData) {
-                currentWeekNumber++;
-            }
-        }
-    }
-
-    function getWeekNumber(date) {
-        const firstJan = new Date(date.getFullYear(), 0, 1);
-        const days = Math.floor((date - firstJan) / (24 * 60 * 60 * 1000));
-        return Math.ceil((days + firstJan.getDay() + 1) / 7);
-    }
-
-    function prevMonth() {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-    }
-
-    function nextMonth() {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    }
-
-    renderCalendar();
-</script>
-
-</body>
-</html>
+  const calendarMonthYear
